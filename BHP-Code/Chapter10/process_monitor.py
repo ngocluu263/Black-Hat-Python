@@ -1,12 +1,14 @@
 import win32con
 import win32api
 import win32security
+import time
 
 import wmi
 import sys
 import os
 
 LOG_FILE = "process_monitor_log.csv"
+
 
 def get_process_privileges(pid):
     try:
@@ -52,6 +54,7 @@ process_watcher = c.Win32_Process.watch_for("creation")
 while True:
     try:
         new_process = process_watcher()
+        print new_process
 
         proc_owner  = new_process.GetOwner()
         proc_owner  = "%s\\%s" % (proc_owner[0],proc_owner[2])
@@ -68,6 +71,7 @@ while True:
         print "%s\r\n" % process_log_message
 
         log_to_file(process_log_message)
+        time.sleep(2)
 
     except:
         pass
